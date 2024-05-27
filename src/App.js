@@ -28,10 +28,18 @@ export default function Board() {
 
   const winner = calculateWinner(squares);
   let status;
+  let end = checkEnd(squares);
   if (winner) {
     status = "Winner: " + winner;
+  } else if (end === true) {
+    status = "Draw";
   } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
+  }
+
+  function resetGame() {
+    setSquares(Array(9).fill(null));
+    setXIsNext(true);
   }
 
   return (
@@ -52,6 +60,11 @@ export default function Board() {
         <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
         <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
+      {winner || end ? (
+        <div className="restart">
+          <button onClick={resetGame}>Play Again</button>
+        </div>
+      ) : null}
     </>
   );
 }
@@ -74,4 +87,8 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function checkEnd(squares) {
+  return squares.every((square) => square !== null);
 }
